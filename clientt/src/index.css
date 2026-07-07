@@ -1,0 +1,65 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html { @apply scroll-smooth; }
+
+body {
+  @apply bg-canvas dark:bg-canvas-dark text-ink dark:text-ink-dark font-body antialiased;
+  background-image: theme('backgroundImage.grain-light');
+  background-attachment: fixed;
+  transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+.dark body {
+  background-image: theme('backgroundImage.grain-dark');
+}
+
+:focus-visible {
+  outline: 2px solid theme('colors.accent.DEFAULT');
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Custom scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: theme('colors.line.DEFAULT') transparent;
+}
+.dark * {
+  scrollbar-color: theme('colors.line.dark') transparent;
+}
+*::-webkit-scrollbar { width: 8px; height: 8px; }
+*::-webkit-scrollbar-track { background: transparent; }
+*::-webkit-scrollbar-thumb {
+  background: theme('colors.line.DEFAULT');
+  border-radius: 999px;
+}
+.dark *::-webkit-scrollbar-thumb { background: theme('colors.line.dark'); }
+
+.glass {
+  @apply bg-white/70 dark:bg-surface-dark/70 backdrop-blur-xl;
+}
+
+.shimmer-text {
+  background: linear-gradient(90deg, theme('colors.ink.DEFAULT') 0%, theme('colors.accent.DEFAULT') 50%, theme('colors.ink.DEFAULT') 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.dark .shimmer-text {
+  background: linear-gradient(90deg, theme('colors.ink.dark') 0%, theme('colors.accent.dark') 50%, theme('colors.ink.dark') 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
