@@ -6,7 +6,8 @@ export default function ProtectedRoute({ children }) {
 
   if (loading) {
     return (
-      <div className="flex h-screen items-center justify-center font-mono text-sm text-ink/50 dark:text-ink-dark/50">
+      <div className="flex h-screen items-center justify-center gap-3 bg-canvas dark:bg-canvas-dark font-mono text-sm text-ink/50 dark:text-ink-dark/50">
+        <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-accent/30 border-t-accent" />
         Checking session…
       </div>
     );
