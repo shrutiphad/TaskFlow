@@ -21,6 +21,7 @@ export default function TaskCard({ task, onEdit, onDelete }) {
       exit={{ opacity: 0, y: -6, scale: 0.98, transition: { duration: 0.18 } }}
       transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
       whileHover={{ y: -3 }}
+      data-testid="task-card"
       className={`group relative flex items-start justify-between gap-5 overflow-hidden rounded-2xl border border-line/70 dark:border-line-dark/70 bg-surface dark:bg-surface-dark p-5 shadow-xs hover:shadow-card dark:hover:shadow-card-dark hover:border-line dark:hover:border-line-dark/40 transition-[box-shadow,border-color] duration-300 before:absolute before:left-0 before:top-0 before:h-full before:w-[3px] before:rounded-r ${SPINE[task.priority]}`}
     >
       <div className="min-w-0 flex-1">
@@ -47,14 +48,12 @@ export default function TaskCard({ task, onEdit, onDelete }) {
         )}
       </div>
       {(onEdit || onDelete) && (
-         <div className="flex shrink-0 gap-1 sm:opacity-60 sm:group-hover:opacity-100 transition-opacity">
- 
+        <div className="flex shrink-0 gap-1 sm:opacity-60 sm:group-hover:opacity-100 transition-opacity">
           {onEdit && (
             <button
               onClick={() => onEdit(task)}
               aria-label={`Edit ${task.title}`}
               className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg text-ink/40 hover:bg-accent-soft hover:text-accent dark:text-ink-dark/40 dark:hover:bg-accent/15 dark:hover:text-accent-dark transition-colors"
-
             >
               <Pencil size={15} />
             </button>
@@ -64,7 +63,6 @@ export default function TaskCard({ task, onEdit, onDelete }) {
               onClick={() => onDelete(task)}
               aria-label={`Delete ${task.title}`}
               className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg text-ink/40 hover:bg-rose-soft hover:text-rose dark:text-ink-dark/40 dark:hover:bg-rose/12 dark:hover:text-rose-dark transition-colors"
-
             >
               <Trash2 size={15} />
             </button>

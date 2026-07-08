@@ -8,6 +8,24 @@ import App from '../App';
 // running on localhost:5000 against real Postgres. No mocked axios, no
 // mocked components. This is as close to "a user clicking through the app"
 // as is possible without an actual browser.
+//
+// IMPORTANT — responsive DOM note:
+// Navbar and FilterSortBar each render a desktop layout AND a mobile layout
+// simultaneously, toggled purely via Tailwind's `hidden` / `md:flex` /
+// `sm:hidden` classes. This project's vitest.config.js does not set
+// `test.css: true`, so jsdom never loads the real stylesheet and those
+// breakpoint classes have no effect during tests — both layouts are present
+// in the DOM at once. Concretely this means:
+//   - "Dashboard" / "Tasks" nav links each appear twice (desktop sidebar +
+//     mobile bottom tab bar)
+//   - "Log out" appears twice (desktop sidebar text + mobile top bar
+//     aria-label)
+//   - "New task" appears twice (desktop filter bar + mobile filter bar)
+// Any query for these must use getAllBy*(...)[0] rather than a singular
+// getBy*/findBy*, or must be scoped with within() to a specific container.
+// Task-card-level assertions (status/priority) are scoped via the
+// `data-testid="task-card"` hook on TaskCard's root element rather than
+// matching on className, so they stay stable across future visual changes.
 
 const uniqueEmail = () => `vitest.${Date.now()}.${Math.random().toString(36).slice(2)}@example.com`;
 
@@ -33,10 +51,7 @@ describe('Register -> Dashboard -> Tasks full flow', () => {
     // Real assertion: did we actually land on the dashboard, with real data
     // fetched from the real /dashboard/summary endpoint?
     expect(await screen.findByText(/welcome back/i)).toBeInTheDocument();
-    await screen.findByText(/total tasks/i, {}, { timeout: 3000 })
-//     screen.getByText((content, element) => 
-//   element?.textContent?.includes('TOTAL TASKS')
-// )
+    await screen.findByText(/total tasks/i, {}, { timeout: 3000 });
     expect(localStorage.getItem('token')).toBeTruthy();
   }, 15000);
 
@@ -71,46 +86,39 @@ describe('Register -> Dashboard -> Tasks full flow', () => {
     await user.click(screen.getByRole('button', { name: /create account/i }));
     await screen.findByText(/welcome back/i);
 
-    // Navigate to Tasks via the real Navbar link
+    // Navbar renders a desktop sidebar AND a mobile bottom tab bar at once
+    // (see note above) — "Tasks" matches twice, so take the first.
     await user.click(screen.getAllByRole('link', { name: /tasks/i })[0]);
     expect(await screen.findByText('Create your first task')).toBeInTheDocument();
 
-    // Create a task through the real modal
+    // Create a task through the real modal. We deliberately enter via the
+    // EmptyState's "Create your first task" button rather than the filter
+    // bar's "New task" button, since the latter is duplicated (desktop +
+    // mobile filter bars) and this one is not.
     await user.click(screen.getByRole('button', { name: /create your first task/i }));
     await screen.findByRole('heading', { name: 'New task' });
     await user.type(screen.getByPlaceholderText('e.g. Ship the onboarding flow'), 'Vitest smoke task');
     await user.click(screen.getByRole('button', { name: /^create task$/i }));
 
-    // Real assertion: the task now appears in the real list, fetched from the real API
-    // const taskTitle = await screen.findByText('Vitest smoke task');
-    // const taskCard = taskTitle.closest('[class*="rounded-lg"]')
-    // // taskTitle.closest('div.rounded-lg');
-    
-    // expect(within(taskCard).getByText('To Do')).toBeInTheDocument();
-    // getByText(/to do/i)
-
-
+    // Real assertion: the task now appears in the real list, fetched from
+    // the real API. Scope into the specific card via data-testid so this
+    // stays robust to future className/markup changes.
     const taskTitle = await screen.findByText('Vitest smoke task');
     expect(taskTitle).toBeInTheDocument();
 
-// // Find To Do badge anywhere on the page (there's only one newly created task)
-//     expect(screen.getByText(/to do/i)).toBeInTheDocument();
-// Find To Do badge anywhere on the page (there's only one newly created task)
-expect(screen.getAllByText(/to do/i).find(el => el.tagName === 'SPAN')).toBeInTheDocument();
+    const taskCard = taskTitle.closest('[data-testid="task-card"]');
+    expect(taskCard).toBeTruthy();
+    expect(within(taskCard).getByText(/to do/i)).toBeInTheDocument();
 
     // Edit it: change status to Done
-    await user.click(screen.getByRole('button', { name: /edit vitest smoke task/i }));
+    await user.click(within(taskCard).getByRole('button', { name: /edit vitest smoke task/i }));
     await screen.findByRole('heading', { name: 'Edit task' });
     await user.selectOptions(screen.getByLabelText('Status'), 'done');
     await user.click(screen.getByRole('button', { name: /save changes/i }));
 
-    // await waitFor(() => {
-    // expect(screen.getByText(/done/i)).toBeInTheDocument();
-    // });
-
     await waitFor(() => {
-  expect(screen.getAllByText(/done/i).find(el => el.tagName === 'SPAN')).toBeInTheDocument();
-});
+      expect(within(taskCard).getByText(/done/i)).toBeInTheDocument();
+    });
 
     // Filter by "To Do" - the just-completed task should disappear from the list
     await user.selectOptions(screen.getByLabelText(/filter by status/i), 'todo');
@@ -120,9 +128,10 @@ expect(screen.getAllByText(/to do/i).find(el => el.tagName === 'SPAN')).toBeInTh
 
     // Reset filter, then delete with the real confirm dialog
     await user.selectOptions(screen.getByLabelText(/filter by status/i), '');
-    await screen.findByText('Vitest smoke task');
+    const taskTitleAgain = await screen.findByText('Vitest smoke task');
+    const taskCardAgain = taskTitleAgain.closest('[data-testid="task-card"]');
 
-    await user.click(screen.getByRole('button', { name: /delete vitest smoke task/i }));
+    await user.click(within(taskCardAgain).getByRole('button', { name: /delete vitest smoke task/i }));
     await screen.findByText('Delete this task?');
     await user.click(screen.getByRole('button', { name: /^delete$/i }));
 
