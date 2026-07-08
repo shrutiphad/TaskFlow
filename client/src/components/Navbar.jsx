@@ -20,69 +20,107 @@ export default function Navbar() {
     navigate('/login');
   };
 
+  const ThemeIcon = (
+    <span className="relative flex h-4 w-4 items-center justify-center">
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.span
+          key={theme}
+          initial={{ opacity: 0, rotate: -90, scale: 0.6 }}
+          animate={{ opacity: 1, rotate: 0, scale: 1 }}
+          exit={{ opacity: 0, rotate: 90, scale: 0.6 }}
+          transition={{ duration: 0.25, ease: 'easeOut' }}
+          className="absolute"
+        >
+          {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+        </motion.span>
+      </AnimatePresence>
+    </span>
+  );
+
   return (
-    <aside className="sticky top-0 flex h-screen w-60 shrink-0 flex-col justify-between border-r border-line/70 dark:border-line-dark/70 bg-surface/80 dark:bg-surface-dark/80 backdrop-blur-xl px-3 py-5">
-      <div>
-        <div className="mb-9 flex items-center gap-2.5 px-2">
-          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-accent to-accent-dark font-display text-sm font-bold text-white shadow-glow">
-            T
-          </span>
-          <span className="font-display text-base font-semibold tracking-tight">Taskframe</span>
+    <>
+      {/* Desktop sidebar */}
+      <aside className="sticky top-0 hidden md:flex h-screen w-60 shrink-0 flex-col justify-between border-r border-line/70 dark:border-line-dark/70 bg-surface/80 dark:bg-surface-dark/80 backdrop-blur-xl px-3 py-5">
+        <div>
+          <div className="mb-9 flex items-center gap-2.5 px-2">
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent font-display text-sm font-semibold text-white shadow-glow">T</span>
+            <span className="font-display text-h4 font-medium tracking-tight">Taskframe</span>
+          </div>
+
+          <nav className="flex flex-col gap-1">
+            {NAV_ITEMS.map(({ to, label, icon: Icon }) => {
+              const isActive = location.pathname === to;
+              return (
+                <NavLink key={to} to={to} className="relative flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-body font-medium">
+                  {isActive && (
+                    <motion.span
+                      layoutId="nav-active-pill"
+                      className="absolute inset-0 rounded-lg bg-accent-soft dark:bg-accent/15"
+                      transition={{ type: 'spring', stiffness: 400, damping: 32 }}
+                    />
+                  )}
+                  <span className={`relative flex items-center gap-2.5 ${isActive ? 'text-accent dark:text-accent-dark' : 'text-ink/60 hover:text-ink dark:text-ink-dark/60 dark:hover:text-ink-dark'} transition-colors`}>
+                    <Icon size={16} />
+                    {label}
+                  </span>
+                </NavLink>
+              );
+            })}
+          </nav>
         </div>
 
-        <nav className="flex flex-col gap-1">
-          {NAV_ITEMS.map(({ to, label, icon: Icon }) => {
-            const isActive = location.pathname === to;
-            return (
-              <NavLink key={to} to={to} className="relative flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-medium">
-                {isActive && (
-                  <motion.span
-                    layoutId="nav-active-pill"
-                    className="absolute inset-0 rounded-lg bg-accent-soft dark:bg-accent/15"
-                    transition={{ type: 'spring', stiffness: 400, damping: 32 }}
-                  />
-                )}
-                <span className={`relative flex items-center gap-2.5 ${isActive ? 'text-accent dark:text-accent-dark' : 'text-ink/60 hover:text-ink dark:text-ink-dark/60 dark:hover:text-ink-dark'} transition-colors`}>
-                  <Icon size={16} />
-                  {label}
-                </span>
-              </NavLink>
-            );
-          })}
-        </nav>
+        <div className="flex flex-col gap-1 border-t border-line/70 dark:border-line-dark/70 pt-3">
+          <div className="px-2 pb-2 text-micro text-ink/45 dark:text-ink-dark/45 font-mono truncate">{user?.email}</div>
+          <button
+            onClick={toggleTheme}
+            className="flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-body font-medium text-ink/70 hover:bg-canvas dark:text-ink-dark/70 dark:hover:bg-canvas-dark transition-colors"
+          >
+            {ThemeIcon}
+            {theme === 'dark' ? 'Light mode' : 'Dark mode'}
+          </button>
+          <button
+            onClick={handleLogout}
+            className="flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-body font-medium text-ink/70 hover:bg-rose-soft hover:text-rose dark:text-ink-dark/70 dark:hover:bg-rose/12 transition-colors"
+          >
+            <LogOut size={16} /> Log out
+          </button>
+        </div>
+      </aside>
+
+      {/* Mobile top bar */}
+      <div className="sticky top-0 z-30 flex md:hidden items-center justify-between border-b border-line/70 dark:border-line-dark/70 bg-surface/85 dark:bg-surface-dark/85 backdrop-blur-xl px-4 py-3">
+        <div className="flex items-center gap-2">
+          <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-accent font-display text-xs font-semibold text-white">T</span>
+          <span className="font-display text-h4 font-medium tracking-tight">Taskframe</span>
+        </div>
+        <div className="flex items-center gap-1">
+          <button onClick={toggleTheme} aria-label="Toggle theme" className="rounded-lg p-2.5 min-h-[44px] min-w-[44px] text-ink/70 dark:text-ink-dark/70">
+            {ThemeIcon}
+          </button>
+          <button onClick={handleLogout} aria-label="Log out" className="rounded-lg p-2.5 min-h-[44px] min-w-[44px] text-ink/70 dark:text-ink-dark/70">
+            <LogOut size={16} />
+          </button>
+        </div>
       </div>
 
-      <div className="flex flex-col gap-1 border-t border-line/70 dark:border-line-dark/70 pt-3">
-        <div className="px-2 pb-2 text-xs text-ink/45 dark:text-ink-dark/45 font-mono truncate">{user?.email}</div>
-
-        <button
-          onClick={toggleTheme}
-          className="group flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-medium text-ink/70 hover:bg-canvas dark:text-ink-dark/70 dark:hover:bg-canvas-dark transition-colors"
-        >
-          <span className="relative flex h-4 w-4 items-center justify-center">
-            <AnimatePresence mode="wait" initial={false}>
-              <motion.span
-                key={theme}
-                initial={{ opacity: 0, rotate: -90, scale: 0.6 }}
-                animate={{ opacity: 1, rotate: 0, scale: 1 }}
-                exit={{ opacity: 0, rotate: 90, scale: 0.6 }}
-                transition={{ duration: 0.25, ease: 'easeOut' }}
-                className="absolute"
-              >
-                {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
-              </motion.span>
-            </AnimatePresence>
-          </span>
-          {theme === 'dark' ? 'Light mode' : 'Dark mode'}
-        </button>
-
-        <button
-          onClick={handleLogout}
-          className="flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-medium text-ink/70 hover:bg-priority-high/10 hover:text-priority-high dark:text-ink-dark/70 dark:hover:bg-priority-high/10 transition-colors"
-        >
-          <LogOut size={16} /> Log out
-        </button>
-      </div>
-    </aside>
+      {/* Mobile bottom tab bar */}
+      <nav className="fixed bottom-0 inset-x-0 z-30 flex md:hidden items-center justify-around border-t border-line/70 dark:border-line-dark/70 bg-surface/90 dark:bg-surface-dark/90 backdrop-blur-xl px-2 py-1.5 pb-[max(0.375rem,env(safe-area-inset-bottom))]">
+        {NAV_ITEMS.map(({ to, label, icon: Icon }) => {
+          const isActive = location.pathname === to;
+          return (
+            <NavLink
+              key={to}
+              to={to}
+              className={`flex min-h-[44px] flex-1 flex-col items-center justify-center gap-0.5 rounded-lg py-1.5 text-micro font-medium transition-colors ${
+                isActive ? 'text-accent dark:text-accent-dark' : 'text-ink/50 dark:text-ink-dark/50'
+              }`}
+            >
+              <Icon size={18} />
+              {label}
+            </NavLink>
+          );
+        })}
+      </nav>
+    </>
   );
 }

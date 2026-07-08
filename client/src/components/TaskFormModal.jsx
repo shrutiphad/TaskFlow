@@ -14,8 +14,8 @@ const taskSchema = z.object({
 });
 
 const fieldClass =
-  'w-full rounded-lg border border-line dark:border-line-dark bg-surface2 dark:bg-surface2-dark px-3 py-2 text-sm outline-none transition-colors focus:border-accent';
-const labelClass = 'mb-1 block text-xs font-medium text-ink/60 dark:text-ink-dark/60';
+  'w-full rounded-xl border border-line dark:border-line-dark bg-surface2 dark:bg-surface2-dark px-3.5 py-2.5 text-body outline-none transition-colors focus:border-accent';
+const labelClass = 'mb-1.5 block text-micro font-medium uppercase tracking-wide text-ink/50 dark:text-ink-dark/50';
 
 export default function TaskFormModal({ open, initialTask, onClose, onSubmit }) {
   const {
@@ -65,10 +65,10 @@ export default function TaskFormModal({ open, initialTask, onClose, onSubmit }) 
             exit={{ opacity: 0, scale: 0.96, y: 4 }}
             transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
             onClick={(e) => e.stopPropagation()}
-            className="w-full max-w-md rounded-xl border border-line dark:border-line-dark bg-surface dark:bg-surface-dark p-5 shadow-card dark:shadow-card-dark"
+            className="w-full max-w-md rounded-2xl border border-line dark:border-line-dark bg-surface dark:bg-surface-dark p-6 shadow-card dark:shadow-card-dark"
           >
             <div className="mb-4 flex items-center justify-between">
-              <h2 className="font-display text-base font-semibold">{initialTask ? 'Edit task' : 'New task'}</h2>
+              <h2 className="font-display text-h4 font-medium">{initialTask ? 'Edit task' : 'New task'}</h2>
               <button onClick={onClose} aria-label="Close" className="rounded-md p-1 hover:bg-canvas dark:hover:bg-canvas-dark transition-colors">
                 <X size={18} />
               </button>
@@ -78,7 +78,7 @@ export default function TaskFormModal({ open, initialTask, onClose, onSubmit }) 
               <div>
                 <label htmlFor="task-title" className={labelClass}>Title</label>
                 <input {...register('title')} id="task-title" className={fieldClass} placeholder="e.g. Ship the onboarding flow" />
-                {errors.title && <p className="mt-1 text-xs text-priority-high">{errors.title.message}</p>}
+                {errors.title && <p className="mt-1 text-micro text-rose">{errors.title.message}</p>}
               </div>
 
               <div>
@@ -111,13 +111,13 @@ export default function TaskFormModal({ open, initialTask, onClose, onSubmit }) 
               </div>
 
               <div className="flex justify-end gap-2 pt-2">
-                <button type="button" onClick={onClose} className="rounded-lg px-3 py-2 text-sm font-medium hover:bg-canvas dark:hover:bg-canvas-dark transition-colors">
+                <button type="button" onClick={onClose} className="rounded-lg px-4 py-2.5 text-body font-medium hover:bg-canvas dark:hover:bg-canvas-dark transition-colors min-h-[44px]">
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="rounded-lg bg-gradient-to-br from-accent to-accent-dark px-4 py-2 text-sm font-medium text-white shadow-glow disabled:opacity-50 transition-opacity"
+                  className="rounded-lg bg-accent px-4 py-2.5 text-body font-medium text-white shadow-glow disabled:opacity-50 transition-opacity min-h-[44px]"
                 >
                   {initialTask ? 'Save changes' : 'Create task'}
                 </button>
