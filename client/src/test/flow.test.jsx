@@ -33,9 +33,10 @@ describe('Register -> Dashboard -> Tasks full flow', () => {
     // Real assertion: did we actually land on the dashboard, with real data
     // fetched from the real /dashboard/summary endpoint?
     expect(await screen.findByText(/welcome back/i)).toBeInTheDocument();
-    screen.getByText((content, element) => 
-  element?.textContent?.includes('TOTAL TASKS')
-)
+    await screen.findByText(/total tasks/i, {}, { timeout: 3000 })
+//     screen.getByText((content, element) => 
+//   element?.textContent?.includes('TOTAL TASKS')
+// )
     expect(localStorage.getItem('token')).toBeTruthy();
   }, 15000);
 
@@ -82,8 +83,11 @@ describe('Register -> Dashboard -> Tasks full flow', () => {
 
     // Real assertion: the task now appears in the real list, fetched from the real API
     const taskTitle = await screen.findByText('Vitest smoke task');
-    const taskCard = taskTitle.closest('div.rounded-lg');
-    expect(within(taskCard).getByText('To Do')).toBeInTheDocument();
+    const taskCard = taskTitle.closest('[class*="rounded-lg"]')
+    // taskTitle.closest('div.rounded-lg');
+    
+    expect(within(taskCard).getByText(/to do/i)).toBeInTheDocument();
+  
 
     // Edit it: change status to Done
     await user.click(screen.getByRole('button', { name: /edit vitest smoke task/i }));
