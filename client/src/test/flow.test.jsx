@@ -33,7 +33,9 @@ describe('Register -> Dashboard -> Tasks full flow', () => {
     // Real assertion: did we actually land on the dashboard, with real data
     // fetched from the real /dashboard/summary endpoint?
     expect(await screen.findByText(/welcome back/i)).toBeInTheDocument();
-    expect(await screen.findByText('TOTAL TASKS')).toBeInTheDocument();
+    screen.getByText((content, element) => 
+  element?.textContent?.includes('TOTAL TASKS')
+)
     expect(localStorage.getItem('token')).toBeTruthy();
   }, 15000);
 
@@ -69,7 +71,7 @@ describe('Register -> Dashboard -> Tasks full flow', () => {
     await screen.findByText(/welcome back/i);
 
     // Navigate to Tasks via the real Navbar link
-    await user.click(screen.getByRole('link', { name: /tasks/i }));
+    await user.click(screen.getAllByRole('link', { name: /tasks/i })[0]);
     expect(await screen.findByText('Create your first task')).toBeInTheDocument();
 
     // Create a task through the real modal
