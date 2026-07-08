@@ -104,9 +104,13 @@ expect(screen.getAllByText(/to do/i).find(el => el.tagName === 'SPAN')).toBeInTh
     await user.selectOptions(screen.getByLabelText('Status'), 'done');
     await user.click(screen.getByRole('button', { name: /save changes/i }));
 
+    // await waitFor(() => {
+    // expect(screen.getByText(/done/i)).toBeInTheDocument();
+    // });
+
     await waitFor(() => {
-    expect(screen.getByText(/done/i)).toBeInTheDocument();
-    });
+  expect(screen.getAllByText(/done/i).find(el => el.tagName === 'SPAN')).toBeInTheDocument();
+});
 
     // Filter by "To Do" - the just-completed task should disappear from the list
     await user.selectOptions(screen.getByLabelText(/filter by status/i), 'todo');
