@@ -44,7 +44,7 @@ export default function Register() {
       >
         <div className="mb-6 flex items-center gap-2.5">
           <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent font-display text-sm font-semibold text-white shadow-glow">T</span>
-          <span className="font-display text-h4 font-medium tracking-tight">Taskframe</span>
+          <span className="font-display text-h4 font-medium tracking-tight">TaskFlow</span>
         </div>
         <h1 className="font-display text-h2 font-medium tracking-tight">Create your account</h1>
         <p className="mt-1.5 text-body text-ink/55 dark:text-ink-dark/55">Start managing your tasks in seconds.</p>
