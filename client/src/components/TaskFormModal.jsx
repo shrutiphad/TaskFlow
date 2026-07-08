@@ -56,7 +56,8 @@ export default function TaskFormModal({ open, initialTask, onClose, onSubmit }) 
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.2 }}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm px-4"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4"
+      
           onClick={onClose}
         >
           <motion.div
@@ -65,7 +66,8 @@ export default function TaskFormModal({ open, initialTask, onClose, onSubmit }) 
             exit={{ opacity: 0, scale: 0.96, y: 4 }}
             transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
             onClick={(e) => e.stopPropagation()}
-            className="w-full max-w-md rounded-2xl border border-line dark:border-line-dark bg-surface dark:bg-surface-dark p-6 shadow-card dark:shadow-card-dark"
+  
+            className="w-full max-w-md max-h-[90vh] overflow-y-auto rounded-2xl border border-line dark:border-line-dark bg-surface dark:bg-surface-dark p-6 shadow-card dark:shadow-card-dark"
           >
             <div className="mb-4 flex items-center justify-between">
               <h2 className="font-display text-h4 font-medium">{initialTask ? 'Edit task' : 'New task'}</h2>

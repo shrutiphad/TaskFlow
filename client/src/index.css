@@ -36,3 +36,19 @@ body {
     transition-duration: 0.001ms !important;
   }
 }
+
+ .glass { @apply bg-white/70 dark:bg-surface-dark/70 backdrop-blur-xl; }
+
+ /* Keep native form chrome (select dropdown panel, date picker icon/calendar)
+    in sync with the active theme instead of defaulting to the OS light scheme. */
+ select, input[type="date"] { color-scheme: light; }
+ .dark select, .dark input[type="date"] { color-scheme: dark; }
+
+ /* iOS Safari auto-zooms the whole page when a focused input's font-size is
+     under 16px. Force 16px on small screens only, so the type scale elsewhere
+    in the app is untouched. */
+  @media (max-width: 640px) {
+   input, select, textarea { font-size: 16px !important; }
+  }
+
+ .tabular { font-variant-numeric: tabular-nums; }

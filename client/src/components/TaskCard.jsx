@@ -47,12 +47,14 @@ export default function TaskCard({ task, onEdit, onDelete }) {
         )}
       </div>
       {(onEdit || onDelete) && (
-        <div className="flex shrink-0 gap-1 opacity-60 group-hover:opacity-100 transition-opacity">
+         <div className="flex shrink-0 gap-1 sm:opacity-60 sm:group-hover:opacity-100 transition-opacity">
+ 
           {onEdit && (
             <button
               onClick={() => onEdit(task)}
               aria-label={`Edit ${task.title}`}
-              className="rounded-lg p-2.5 text-ink/40 hover:bg-accent-soft hover:text-accent dark:text-ink-dark/40 dark:hover:bg-accent/15 dark:hover:text-accent-dark transition-colors"
+              className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg text-ink/40 hover:bg-accent-soft hover:text-accent dark:text-ink-dark/40 dark:hover:bg-accent/15 dark:hover:text-accent-dark transition-colors"
+
             >
               <Pencil size={15} />
             </button>
@@ -61,7 +63,8 @@ export default function TaskCard({ task, onEdit, onDelete }) {
             <button
               onClick={() => onDelete(task)}
               aria-label={`Delete ${task.title}`}
-              className="rounded-lg p-2.5 text-ink/40 hover:bg-rose-soft hover:text-rose dark:text-ink-dark/40 dark:hover:bg-rose/12 dark:hover:text-rose-dark transition-colors"
+              className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg text-ink/40 hover:bg-rose-soft hover:text-rose dark:text-ink-dark/40 dark:hover:bg-rose/12 dark:hover:text-rose-dark transition-colors"
+
             >
               <Trash2 size={15} />
             </button>

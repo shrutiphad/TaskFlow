@@ -33,9 +33,10 @@ export default function Login() {
         initial={{ opacity: 0, y: 16, scale: 0.98 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-        className="relative w-full max-w-sm rounded-2xl border border-line dark:border-line-dark bg-surface/90 dark:bg-surface-dark/90 backdrop-blur-xl p-8 shadow-card dark:shadow-card-dark"
-      >
-        <div className="mb-6 flex items-center gap-2.5">
+    
+          className="relative w-full max-w-sm rounded-2xl border border-line dark:border-line-dark bg-surface/90 dark:bg-surface-dark/90 backdrop-blur-xl p-6 sm:p-8 shadow-card dark:shadow-card-dark"
+     >
+       <div className="mb-6 flex items-center gap-2.5">
           <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent font-display text-sm font-semibold text-white shadow-glow">T</span>
           <span className="font-display text-h4 font-medium tracking-tight">TaskFlow</span>
         </div>

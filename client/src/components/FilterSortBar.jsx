@@ -95,9 +95,9 @@ export default function FilterSortBar({ filters, onChange, onNewTask }) {
               exit={{ y: '100%' }}
               transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
               onClick={(e) => e.stopPropagation()}
-              className="w-full rounded-t-2xl border-t border-line dark:border-line-dark bg-surface dark:bg-surface-dark p-5 pb-8 shadow-card dark:shadow-card-dark"
-            >
-              <div className="mb-4 flex items-center justify-between">
+              className="w-full rounded-t-2xl border-t border-line dark:border-line-dark bg-surface dark:bg-surface-dark p-5 pb-[max(2rem,env(safe-area-inset-bottom))] shadow-card dark:shadow-card-dark"
+         >
+            <div className="mb-4 flex items-center justify-between">
                 <h2 className="font-display text-h4 font-medium">Filter & sort</h2>
                 <button onClick={() => setSheetOpen(false)} aria-label="Close" className="rounded-lg p-2 hover:bg-canvas dark:hover:bg-canvas-dark">
                   <X size={18} />

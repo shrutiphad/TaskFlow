@@ -59,7 +59,8 @@ export default function Tasks() {
   return (
     <div className="flex">
       <Navbar />
-      <main className="min-h-screen flex-1 p-5 pb-24 md:pb-8 sm:p-8 max-w-5xl">
+
+         <main className="min-h-screen flex-1 px-5 pt-5 sm:px-8 sm:pt-8 pb-24 md:pb-8 max-w-5xl">
         <motion.header
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
