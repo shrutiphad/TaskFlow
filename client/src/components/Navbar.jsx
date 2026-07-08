@@ -91,7 +91,7 @@ export default function Navbar() {
       <div className="sticky top-0 z-30 flex md:hidden items-center justify-between border-b border-line/70 dark:border-line-dark/70 bg-surface/85 dark:bg-surface-dark/85 backdrop-blur-xl px-4 py-3">
         <div className="flex items-center gap-2">
           <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-accent font-display text-xs font-semibold text-white">T</span>
-          <span className="font-display text-h4 font-medium tracking-tight"><TaskFlow></TaskFlow></span>
+        <span className="font-display text-h4 font-medium tracking-tight">TaskFlow</span>
         </div>
         <div className="flex items-center gap-1">
           <button onClick={toggleTheme} aria-label="Toggle theme" className="rounded-lg p-2.5 min-h-[44px] min-w-[44px] text-ink/70 dark:text-ink-dark/70">
