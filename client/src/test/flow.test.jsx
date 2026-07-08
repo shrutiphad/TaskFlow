@@ -93,9 +93,10 @@ describe('Register -> Dashboard -> Tasks full flow', () => {
     const taskTitle = await screen.findByText('Vitest smoke task');
     expect(taskTitle).toBeInTheDocument();
 
+// // Find To Do badge anywhere on the page (there's only one newly created task)
+//     expect(screen.getByText(/to do/i)).toBeInTheDocument();
 // Find To Do badge anywhere on the page (there's only one newly created task)
-    expect(screen.getByText(/to do/i)).toBeInTheDocument();
-
+expect(screen.getAllByText(/to do/i).find(el => el.tagName === 'SPAN')).toBeInTheDocument();
 
     // Edit it: change status to Done
     await user.click(screen.getByRole('button', { name: /edit vitest smoke task/i }));
