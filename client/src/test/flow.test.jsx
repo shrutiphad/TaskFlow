@@ -80,7 +80,7 @@ describe('Register -> Dashboard -> Tasks full flow', () => {
 
     // Real assertion: the task now appears in the real list, fetched from the real API
     const taskTitle = await screen.findByText('Vitest smoke task');
-    const taskCard = taskTitle.closest('div.rounded-lg');
+    const taskCard = taskTitle.closest('div.rounded-xl');
     expect(within(taskCard).getByText('To Do')).toBeInTheDocument();
 
     // Edit it: change status to Done
