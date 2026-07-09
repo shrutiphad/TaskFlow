@@ -58,9 +58,10 @@ export default {
       backgroundImage: {
         'accent-gradient': 'linear-gradient(120deg, #2338B0 0%, #4340C8 48%, #7A4FE0 116%)',
         'accent-gradient-soft': 'linear-gradient(120deg, rgba(35,56,176,0.16), rgba(67,64,200,0.12), rgba(122,79,224,0.12))',
-        /* Luminous mesh — navy -> indigo -> purple, the backdrop that makes glass glow */
+        /* Luminous mesh — navy -> indigo -> purple, the backdrop that makes glass glow.
+           Light: soft, wide, low-contrast blobs so the wash reads even (no hot patches). */
         'mesh-light':
-          'radial-gradient(at 12% 18%, rgba(43,64,199,0.30), transparent 46%), radial-gradient(at 88% 12%, rgba(122,79,224,0.22), transparent 44%), radial-gradient(at 78% 88%, rgba(62,90,224,0.20), transparent 46%), radial-gradient(at 16% 90%, rgba(80,64,190,0.16), transparent 44%)',
+          'radial-gradient(at 22% 22%, rgba(52,72,200,0.15), transparent 60%), radial-gradient(at 80% 24%, rgba(120,82,220,0.12), transparent 60%), radial-gradient(at 80% 80%, rgba(60,88,220,0.12), transparent 60%), radial-gradient(at 22% 82%, rgba(92,74,205,0.11), transparent 60%)',
         'mesh-dark':
           'radial-gradient(at 12% 18%, rgba(43,64,199,0.42), transparent 50%), radial-gradient(at 88% 12%, rgba(122,79,224,0.28), transparent 48%), radial-gradient(at 78% 88%, rgba(62,90,224,0.24), transparent 50%), radial-gradient(at 16% 90%, rgba(70,58,170,0.24), transparent 48%)',
       },

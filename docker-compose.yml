@@ -26,7 +26,7 @@ services:
         condition: service_healthy
     environment:
       NODE_ENV: development
-      PORT: 5000
+      PORT: 8080
       DB_HOST: db
       DB_PORT: 5432
       DB_NAME: task_manager
@@ -36,7 +36,7 @@ services:
       JWT_EXPIRES_IN: 7d
       CLIENT_ORIGIN: http://localhost:5173
     ports:
-      - '5000:5000'
+      - '8080:8080'
 
   client:
     build: ./client
@@ -44,7 +44,7 @@ services:
     depends_on:
       - server
     environment:
-      VITE_API_URL: http://localhost:5000/api
+      VITE_API_URL: http://localhost:8080/api
     ports:
       - '5173:5173'
 

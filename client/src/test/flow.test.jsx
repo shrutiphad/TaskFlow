@@ -41,7 +41,7 @@ import App from '../App';
 // below are sized above the sum of the network waits each test performs.
 const NET = 8000;
 
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8080/api';
 
 const uniqueEmail = () => `vitest.${Date.now()}.${Math.random().toString(36).slice(2)}@example.com`;
 
