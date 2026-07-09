@@ -1,171 +1,225 @@
-# TaskFlow — Task Management Application
+# TaskFlow — Full-Stack Task Management Application
 
-A full-stack task management app built for the Mayfair Worktops Full Stack Developer take-home assignment. Users register, log in, and manage personal tasks (create/read/update/delete) with filtering, sorting, and a summary dashboard.
+A production-quality task management application built for the **Mayfair Worktops Full Stack Developer** assignment. Users register, log in, and manage personal tasks with full CRUD, filtering, sorting, and a summary dashboard — behind JWT-based authentication with per-user data isolation.
 
-**AI tool disclosure:** built with Claude (Anthropic) as a pair-programming assistant, per the assignment's explicit allowance for AI tool use. Every design decision below is one I can walk through line by line in a follow-up interview.
+**Live demo:** https://task-flow-mayfair.vercel.app
+**Demo login:** `demo@mayfair.dev` / `Demo1234`
+
+> **AI tool disclosure (per the assignment):** built with Claude (Anthropic) as a pair-programming assistant. Every design decision and line of code is one I can explain in a follow-up interview.
 
 ---
 
-## 1. Tech stack
+## 1. Overview
+
+TaskFlow is a full-stack solution with a **clear separation between frontend and backend** — a React single-page app talking to a standalone Express REST API over HTTP, with no shared runtime. Authentication is stateless (JWT); every request re-verifies identity, and every task query is scoped to its owner so no user can ever access another user's data.
+
+| | |
+|---|---|
+| **Frontend (Vercel)** | https://task-flow-mayfair.vercel.app |
+| **Backend API (Render)** | `<FILL IN: https://your-backend.onrender.com>` |
+| **Database** | PostgreSQL (Render managed Postgres) |
+
+---
+
+## 2. Tech stack
 
 | Layer | Choice | Why |
 |---|---|---|
-| Frontend | React 18 + Vite | Fast dev server, no framework magic hiding the client/server boundary the brief asks for |
-| Frontend state | React Context (auth, theme) + Zustand (tasks) | Context for cross-cutting concerns that rarely change; Zustand for the task list, which updates on every filter/sort/CRUD action and would cause noisy re-renders under Context |
-| Styling | Tailwind CSS | Utility-first, fast to build a consistent design system with dark mode support |
-| Forms/validation | React Hook Form + Zod (task form), React Hook Form (auth forms) | Declarative client-side validation matching the backend rules |
-| Backend | Node.js + Express | Explicitly requested in the brief |
-| Database | PostgreSQL + Sequelize | Relational integrity for the user→tasks relationship, real indexes, and enum types for priority/status |
-| Auth | JWT (stateless) + bcrypt | Required by the brief; see ARCHITECTURE.md for the full flow and trade-offs |
+| Frontend | React 18 + Vite | Fast dev/build; keeps the client/backend boundary explicit (no folded-in API) |
+| State | React Context (auth, theme) + Zustand (tasks) | Context for rarely-changing global state; Zustand for the task list to avoid re-render churn on every filter/sort |
+| Styling | Tailwind CSS | Utility-first, consistent design system, built-in dark mode |
+| Forms / validation | React Hook Form + Zod | Declarative client-side validation mirroring the server rules |
+| Backend | Node.js + Express | RESTful API with middleware-based auth, validation, and error handling |
+| Database | PostgreSQL + Sequelize ORM | Relational integrity for the user->tasks relationship, real indexes, enum types for priority/status |
+| Auth | JWT (stateless) + bcrypt | Token-based auth; passwords hashed, never stored in plaintext |
+| Deployment | Vercel (frontend) + Render (backend + Postgres) | Standard MERN/PERN split-deployment pattern |
 
-This is a **separate frontend/backend MERN-style app** (`/client` + `/server`), not a Next.js fullstack app — deliberately, because the brief calls out "a clear separation between frontend and backend" and grades API design as its own 15-point category.
+This is a **PERN**-style app (Postgres/Express/React/Node) — the SQL option the brief explicitly allows — deliberately kept as two separate `/client` and `/server` projects.
 
 ---
 
-## 2. Project structure
+## 3. Features
+
+**Authentication**
+- Registration with email + password validation
+- JWT-based login; protected routes (dashboard/tasks are inaccessible when logged out)
+- Logout that clears the session token
+
+**Task management (CRUD)**
+- Create tasks with title (required), description, priority (Low/Medium/High), due date, and status (To Do / In Progress / Done)
+- View all of the logged-in user's tasks, **filter** by status and priority, **sort** by due date or creation date
+- Edit any field; delete with a confirmation prompt
+
+**Dashboard**
+- Total tasks, a breakdown grouped by status, and an overdue count — aggregated in the database, not on the client
+- Colour-coded priority badges and status indicators
+
+**UX / polish**
+- Responsive, mobile-friendly layout
+- Client-side form validation
+- Dark mode toggle (bonus)
+
+---
+
+## 4. Screenshots
+
+| Login | Dashboard | Create task |
+|---|---|---|
+| ![Login](docs/screenshot-login.png) | ![Dashboard](docs/screenshot-dashboard.png) | ![New task](docs/screenshot-new-task.png) |
+
+> Save the three uploaded screenshots into a `docs/` folder as `screenshot-login.png`, `screenshot-dashboard.png`, and `screenshot-new-task.png` so these render on GitHub.
+
+---
+
+## 5. Project structure
 
 ```
-mayfair-task-manager/
-├── client/                 # React + Vite frontend
+taskflow/
+├── client/                     # React + Vite frontend
 │   └── src/
-│       ├── api/             # axios instance + thin API wrapper functions
-│       ├── context/         # AuthContext, ThemeContext
-│       ├── store/           # Zustand task store
-│       ├── components/      # Navbar, TaskCard, TaskFormModal, etc.
-│       └── pages/            # Login, Register, Dashboard, Tasks
-├── server/                  # Express + PostgreSQL backend
+│       ├── api/                 # axios instance (JWT interceptors) + API wrappers
+│       ├── context/             # AuthContext, ThemeContext
+│       ├── store/               # Zustand task store
+│       ├── components/          # Navbar, TaskCard, TaskFormModal, FilterSortBar, etc.
+│       └── pages/               # Login, Register, Dashboard, Tasks
+├── server/                      # Express + PostgreSQL backend
 │   ├── src/
-│   │   ├── config/           # Sequelize connection
-│   │   ├── models/           # User, Task
-│   │   ├── middleware/       # auth, validation, error handling
-│   │   ├── controllers/      # auth, task, dashboard
-│   │   └── routes/
-│   ├── seed/                 # demo data seed script
-│   └── tests/                # Jest + Supertest integration tests
-├── docker-compose.yml        # one-command local startup (db + server + client)
-└── ARCHITECTURE.md
+│   │   ├── config/               # Sequelize connection
+│   │   ├── models/               # User, Task (schemas, associations, indexes)
+│   │   ├── middleware/           # auth, validation, centralized error handling
+│   │   ├── controllers/          # auth, task, dashboard
+│   │   ├── routes/
+│   │   └── utils/                # JWT + asyncHandler helpers
+│   ├── seed/                     # demo user + sample tasks
+│   └── tests/                    # Jest + Supertest integration tests
+├── .github/workflows/ci.yml      # GitHub Actions CI
+├── docker-compose.yml            # one-command local startup
+└── ARCHITECTURE.md               # design decisions & trade-offs
 ```
 
 ---
 
-## 3. Local setup
+## 6. Local setup
 
 ### Prerequisites
 - Node.js 20+
-- PostgreSQL 14+ running locally (or use Docker — see §6)
+- PostgreSQL 14+ running locally
 
 ### Backend
-
 ```bash
 cd server
-cp .env.example .env      # edit DB_* values if your local Postgres differs
+cp .env.example .env          # fill in DB_* values, JWT_SECRET, CLIENT_ORIGIN
 npm install
-npm run seed               # optional: creates a demo user + 8 sample tasks
-npm run dev                 # http://localhost:5000
+npm run seed                   # optional: creates demo user + 8 sample tasks
+npm run dev                    # http://localhost:5000
 ```
 
 ### Frontend
-
 ```bash
 cd client
-cp .env.example .env
+cp .env.example .env           # set VITE_API_URL=http://localhost:5000/api
 npm install
-npm run dev                 # http://localhost:5173
+npm run dev                    # http://localhost:5173
 ```
 
-### Demo login
+Log in with the seeded demo account: `demo@mayfair.dev` / `Demo1234`.
+
+### One-command startup (Docker)
+```bash
+docker compose up --build      # starts Postgres + backend + frontend together
 ```
-email:    demo@mayfair.dev
-password: Demo1234
-```
-(created by `npm run seed` above)
 
 ---
 
-## 4. Environment variables
+## 7. Environment variables
 
 **server/.env**
 | Variable | Description |
 |---|---|
-| `PORT` | Port the Express server listens on (default 5000) |
+| `PORT` | Server port (default 5000) |
 | `NODE_ENV` | `development` / `production` / `test` |
-| `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD` | Discrete Postgres connection params for local dev |
-| `DATABASE_URL` | Optional single connection string; if set, takes priority over the discrete `DB_*` vars (used by most managed Postgres providers) |
-| `JWT_SECRET` | Secret used to sign JWTs — must be a long random string in production |
+| `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD` | Postgres connection details (local dev) |
+| `DATABASE_URL` | Single connection string; if set, overrides the discrete `DB_*` vars (used by Render's managed Postgres) |
+| `JWT_SECRET` | Secret for signing JWTs — a long random string |
 | `JWT_EXPIRES_IN` | Token lifetime, e.g. `7d` |
-| `CLIENT_ORIGIN` | Comma-separated list of origins allowed by CORS |
+| `CLIENT_ORIGIN` | Comma-separated allowed CORS origins (e.g. the Vercel URL in production) |
 
 **client/.env**
 | Variable | Description |
 |---|---|
-| `VITE_API_URL` | Base URL of the backend API, e.g. `http://localhost:5000/api` |
+| `VITE_API_URL` | Base URL of the backend API, e.g. `http://localhost:5000/api` (or the Render URL in production) |
 
 ---
 
-## 5. API reference
+## 8. API reference
 
 All routes are prefixed with `/api`. Protected routes require `Authorization: Bearer <token>`.
 
 ### Auth
 | Method | Route | Auth | Body | Notes |
 |---|---|---|---|---|
-| POST | `/auth/register` | – | `{ name, email, password }` | password ≥ 8 chars, ≥ 1 digit; returns `{ token, user }` |
+| POST | `/auth/register` | – | `{ name, email, password }` | password >= 8 chars, >= 1 digit; returns `{ token, user }` |
 | POST | `/auth/login` | – | `{ email, password }` | returns `{ token, user }` |
-| GET | `/auth/me` | ✓ | – | returns the current user; used to re-validate a stored token on app load |
-| POST | `/auth/logout` | ✓ | – | stateless — client discards the token |
+| GET | `/auth/me` | yes | – | returns the current user; re-validates a stored token on app load |
+| POST | `/auth/logout` | yes | – | stateless — client discards the token |
 
 ### Tasks
 | Method | Route | Auth | Notes |
 |---|---|---|---|
-| GET | `/tasks?status=&priority=&sortBy=&order=` | ✓ | `status`: `todo\|in_progress\|done`, `priority`: `low\|medium\|high`, `sortBy`: `due_date\|created_at`, `order`: `asc\|desc` |
-| GET | `/tasks/:id` | ✓ | 404 if the task doesn't belong to the caller |
-| POST | `/tasks` | ✓ | body: `{ title, description?, priority?, status?, due_date? }` |
-| PUT | `/tasks/:id` | ✓ | any subset of the same fields |
-| DELETE | `/tasks/:id` | ✓ | confirmation prompt is handled client-side |
+| GET | `/tasks?status=&priority=&sortBy=&order=` | yes | `status`: `todo\|in_progress\|done`; `priority`: `low\|medium\|high`; `sortBy`: `due_date\|created_at`; `order`: `asc\|desc` |
+| GET | `/tasks/:id` | yes | 404 if the task isn't the caller's |
+| POST | `/tasks` | yes | `{ title, description?, priority?, status?, due_date? }` |
+| PUT | `/tasks/:id` | yes | any subset of the same fields |
+| DELETE | `/tasks/:id` | yes | confirmation handled client-side |
 
 ### Dashboard
 | Method | Route | Auth | Returns |
 |---|---|---|---|
-| GET | `/dashboard/summary` | ✓ | `{ total, byStatus: { todo, in_progress, done }, overdue }` |
+| GET | `/dashboard/summary` | yes | `{ total, byStatus: { todo, in_progress, done }, overdue }` |
 
-All error responses follow `{ message, errors? }`. Standard status codes: `200/201` success, `400` validation, `401` auth, `404` not found, `409` conflict (duplicate email), `500` unexpected.
+**Status codes:** `200/201` success, `400` validation, `401` auth, `404` not found, `409` conflict (duplicate email), `500` unexpected. All errors follow `{ message, errors? }`.
 
 ---
 
-## 6. Running with Docker
+## 9. Database design
+
+Two tables with a one-to-many relationship (`users` -> `tasks`):
+- **UUID** primary keys (don't leak record counts/order)
+- **ENUM** types for `priority` and `status` (DB-level constraints)
+- `due_date` as `DATE` (no time component — avoids timezone bugs in overdue checks)
+- Foreign key `tasks.user_id -> users.id` with `ON DELETE CASCADE`
+- **Indexes** on `user_id`, `status`, `priority`, `due_date`, plus a composite `(user_id, status, due_date)` covering the most common query shape
+
+Full rationale (schema, auth flow, trade-offs) is in **ARCHITECTURE.md**.
+
+---
+
+## 10. Testing
 
 ```bash
-docker compose up --build
+cd server && npm test
 ```
-This starts Postgres, the backend (port 5000), and the frontend (port 5173) together. Update `JWT_SECRET` in `docker-compose.yml` before using this anywhere but your own machine.
+Integration tests using **Jest + Supertest** against a **real PostgreSQL database** (not mocks), covering registration, login, weak-password rejection, full task CRUD, filtering, and — critically — **ownership isolation** (an automated test proving one user cannot read, edit, or delete another user's tasks) and dashboard aggregation.
 
 ---
 
-## 7. Tests
+## 11. CI/CD
 
-**Backend:**
-```bash
-cd server
-npm test
-```
-15 Jest/Supertest integration tests covering registration, login, weak-password rejection, task CRUD, filtering, ownership isolation (user A cannot read/edit/delete user B's tasks), and dashboard aggregation — run against a real PostgreSQL instance, not mocks.
+**GitHub Actions** (`.github/workflows/ci.yml`) runs on every push and pull request:
+- Spins up a PostgreSQL service container and runs the full backend test suite against it
+- Installs the frontend and runs a production build
 
-**Frontend:**
-```bash
-# with the backend already running on :5000
-cd client
-npm test
-```
-3 Vitest + React Testing Library integration tests that render the actual `<App />` component tree and drive it with real user interactions (typing, clicking, selecting) against the real running backend — register → dashboard, a full task create → edit → filter → delete lifecycle, and a client-side validation rejection path. These are genuine integration tests, not mocked-API unit tests, which is why the backend needs to already be running for `npm test` to pass.
+A red pipeline blocks broken code from merging.
 
 ---
 
-## 8. Screenshots / demo
+## 12. Deployment
 
-Not included in this generated deliverable — run the app locally (§3) and record your own screenshots/GIF of: login, dashboard, task list with filters, and the create/edit modal, then drop them in a `/docs` folder and link them here before submitting.
+- **Frontend -> Vercel:** connect the repo, set root to `client/`, add `VITE_API_URL` pointing at the Render backend URL.
+- **Backend -> Render:** Web Service from `server/`, provision a Render PostgreSQL instance, set `DATABASE_URL` + `JWT_SECRET` + `CLIENT_ORIGIN` (the Vercel URL). `sequelize.sync()` creates the schema on first boot; run the seed script once if you want demo data.
 
 ---
 
-## 9. Known trade-offs
+## 13. Design decisions & trade-offs
 
-See `ARCHITECTURE.md` for the full write-up. Short version: JWT is stored in `localStorage` rather than an httpOnly cookie (simpler CORS story for a 72-hour build; documented as a production hardening item), and `sequelize.sync({ alter: true })` is used instead of versioned migrations (fine for a take-home, would be replaced by `sequelize-cli` migrations in a real rollout).
+See **ARCHITECTURE.md** for the full write-up. In brief: JWT is stored in `localStorage` for a simpler cross-origin setup (documented as a production hardening item vs. httpOnly cookies), and `sequelize.sync` is used in place of versioned migrations for this scope (migrations would replace it for a real production rollout).
