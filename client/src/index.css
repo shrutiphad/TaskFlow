@@ -6,16 +6,27 @@ html { @apply scroll-smooth; }
 
 body {
   @apply bg-canvas dark:bg-canvas-dark text-ink dark:text-ink-dark font-body antialiased;
-  background-image: theme('backgroundImage.grain-light');
-  background-attachment: fixed;
   transition: background-color 0.4s ease, color 0.4s ease;
 }
-.dark body { background-image: theme('backgroundImage.grain-dark'); }
+
+/* Luminous mesh backdrop — fixed layer behind all content, gently drifting.
+   This is what the frosted-glass surfaces refract and glow against. */
+body::before {
+  content: '';
+  position: fixed;
+  inset: -20%;
+  z-index: -1;
+  background-image: theme('backgroundImage.mesh-light');
+  background-repeat: no-repeat;
+  will-change: transform;
+  animation: drift 24s ease-in-out infinite;
+}
+.dark body::before { background-image: theme('backgroundImage.mesh-dark'); }
 
 :focus-visible {
   outline: 2px solid theme('colors.accent.DEFAULT');
   outline-offset: 2px;
-  border-radius: 4px;
+  border-radius: 6px;
 }
 
 * { scrollbar-width: thin; scrollbar-color: theme('colors.line.DEFAULT') transparent; }
@@ -25,9 +36,78 @@ body {
 *::-webkit-scrollbar-thumb { background: theme('colors.line.DEFAULT'); border-radius: 999px; }
 .dark *::-webkit-scrollbar-thumb { background: theme('colors.line.dark'); }
 
-.glass { @apply bg-white/70 dark:bg-surface-dark/70 backdrop-blur-xl; }
+@layer components {
+  /* Frosted glass surface — translucent, blurred, hairline-lit border. */
+  .glass {
+    background-color: rgba(255, 255, 255, 0.55);
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+  }
+  .dark .glass {
+    background-color: rgba(255, 255, 255, 0.055);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  /* Heavier variant for modals / auth cards / navigation. */
+  .glass-strong {
+    background-color: rgba(255, 255, 255, 0.72);
+    backdrop-filter: blur(28px) saturate(170%);
+    -webkit-backdrop-filter: blur(28px) saturate(170%);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+  }
+  .dark .glass-strong {
+    background-color: rgba(22, 28, 66, 0.82); /* navy, matches the dark theme (was near-black) */
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  /* Inset translucent field for inputs / selects. */
+  .glass-input {
+    background-color: rgba(255, 255, 255, 0.45);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.55);
+  }
+  .dark .glass-input {
+    background-color: rgba(255, 255, 255, 0.04);
+    border-color: rgba(255, 255, 255, 0.09);
+  }
+}
 
 .tabular { font-variant-numeric: tabular-nums; }
+
+/* Gradient text for headline accents. */
+.text-gradient {
+  background-image: theme('backgroundImage.accent-gradient');
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Keep native form chrome (select panel, date picker) in sync with the theme,
+   and paint the option list so the dropdown doesn't fall back to OS white. */
+select, input[type="date"] { color-scheme: light; }
+.dark select, .dark input[type="date"] { color-scheme: dark; }
+
+select option {
+  background-color: #ffffff;
+  color: #161a33;
+}
+.dark select option {
+  background-color: #101430; /* navy panel, matches the dark surfaces */
+  color: #e9ecff;
+}
+.dark select option:checked,
+.dark select option:hover {
+  background-color: #2c40c0; /* navy accent highlight */
+  color: #ffffff;
+}
+
+/* iOS Safari zooms when a focused input's font-size is under 16px — force 16px
+   on small screens only, leaving the type scale elsewhere untouched. */
+@media (max-width: 640px) {
+  input, select, textarea { font-size: 16px !important; }
+}
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
@@ -36,19 +116,3 @@ body {
     transition-duration: 0.001ms !important;
   }
 }
-
- .glass { @apply bg-white/70 dark:bg-surface-dark/70 backdrop-blur-xl; }
-
- /* Keep native form chrome (select dropdown panel, date picker icon/calendar)
-    in sync with the active theme instead of defaulting to the OS light scheme. */
- select, input[type="date"] { color-scheme: light; }
- .dark select, .dark input[type="date"] { color-scheme: dark; }
-
- /* iOS Safari auto-zooms the whole page when a focused input's font-size is
-     under 16px. Force 16px on small screens only, so the type scale elsewhere
-    in the app is untouched. */
-  @media (max-width: 640px) {
-   input, select, textarea { font-size: 16px !important; }
-  }
-
- .tabular { font-variant-numeric: tabular-nums; }
