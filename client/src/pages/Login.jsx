@@ -69,9 +69,9 @@ export default function Login() {
           Don't have an account? <Link to="/register" className="font-semibold text-accent dark:text-accent-dark hover:underline">Register</Link>
         </p>
 
-        <p className="glass-input mt-5 rounded-xl p-3 text-center text-micro text-ink/50 dark:text-ink-dark/50 font-mono">
+        {/* <p className="glass-input mt-5 rounded-xl p-3 text-center text-micro text-ink/50 dark:text-ink-dark/50 font-mono">
           Demo: demo@mayfair.dev / Demo1234
-        </p>
+        </p> */}
       </motion.div>
     </div>
   );
