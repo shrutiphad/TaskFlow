@@ -3,7 +3,7 @@ import { ArrowUpDown, Plus, SlidersHorizontal, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const selectClass =
-  'rounded-xl border border-line dark:border-line-dark bg-surface dark:bg-surface-dark px-3 py-2.5 text-body outline-none transition-colors hover:border-accent/40 focus:border-accent';
+  'glass-input rounded-xl px-3 py-2.5 text-body outline-none transition-colors hover:border-accent/50 focus:border-accent';
 
 function Controls({ filters, onChange, stacked }) {
   return (
@@ -29,7 +29,7 @@ function Controls({ filters, onChange, stacked }) {
         </select>
         <button
           onClick={() => onChange({ order: filters.order === 'asc' ? 'desc' : 'asc' })}
-          className="shrink-0 rounded-xl border border-line dark:border-line-dark bg-surface dark:bg-surface-dark p-2.5 hover:border-accent/40 hover:text-accent transition-colors"
+          className="glass-input shrink-0 rounded-xl p-2.5 hover:border-accent/50 hover:text-accent transition-colors"
           aria-label="Toggle sort order"
           title={filters.order === 'asc' ? 'Ascending' : 'Descending'}
         >
@@ -53,7 +53,7 @@ export default function FilterSortBar({ filters, onChange, onNewTask }) {
           whileHover={{ scale: 1.02, y: -1 }}
           whileTap={{ scale: 0.97 }}
           onClick={onNewTask}
-          className="ml-auto flex items-center gap-1.5 rounded-xl bg-accent px-4 py-2.5 text-body font-medium text-white shadow-glow"
+          className="ml-auto flex items-center gap-1.5 rounded-xl bg-accent-gradient px-4 py-2.5 text-body font-semibold text-white shadow-glow"
         >
           <Plus size={16} /> New task
         </motion.button>
@@ -63,18 +63,18 @@ export default function FilterSortBar({ filters, onChange, onNewTask }) {
       <div className="flex sm:hidden items-center gap-2">
         <button
           onClick={() => setSheetOpen(true)}
-          className="relative flex items-center gap-2 rounded-xl border border-line dark:border-line-dark bg-surface dark:bg-surface-dark px-4 py-3 text-body font-medium min-h-[44px]"
+          className="glass-input relative flex items-center gap-2 rounded-xl px-4 py-3 text-body font-medium min-h-[44px]"
         >
           <SlidersHorizontal size={16} />
           Filters
           {activeCount > 0 && (
-            <span className="flex h-4 w-4 items-center justify-center rounded-full bg-accent text-[10px] font-semibold text-white">{activeCount}</span>
+            <span className="flex h-4 w-4 items-center justify-center rounded-full bg-accent text-[10px] font-semibold text-white shadow-[0_0_8px_theme(colors.accent.DEFAULT)]">{activeCount}</span>
           )}
         </button>
         <motion.button
           whileTap={{ scale: 0.97 }}
           onClick={onNewTask}
-          className="ml-auto flex items-center gap-1.5 rounded-xl bg-accent px-4 py-3 text-body font-medium text-white shadow-glow min-h-[44px]"
+          className="ml-auto flex items-center gap-1.5 rounded-xl bg-accent-gradient px-4 py-3 text-body font-semibold text-white shadow-glow min-h-[44px]"
         >
           <Plus size={16} /> New task
         </motion.button>
@@ -86,7 +86,7 @@ export default function FilterSortBar({ filters, onChange, onNewTask }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-end bg-black/40 backdrop-blur-sm sm:hidden"
+            className="fixed inset-0 z-50 flex items-end bg-ink/40 dark:bg-black/60 backdrop-blur-sm sm:hidden"
             onClick={() => setSheetOpen(false)}
           >
             <motion.div
@@ -95,11 +95,12 @@ export default function FilterSortBar({ filters, onChange, onNewTask }) {
               exit={{ y: '100%' }}
               transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
               onClick={(e) => e.stopPropagation()}
-              className="w-full rounded-t-2xl border-t border-line dark:border-line-dark bg-surface dark:bg-surface-dark p-5 pb-[max(2rem,env(safe-area-inset-bottom))] shadow-card dark:shadow-card-dark"
+              className="glass-strong w-full rounded-t-3xl border-0 border-t border-white/50 dark:border-white/10 p-5 pb-[max(2rem,env(safe-area-inset-bottom))] shadow-glass-lg dark:shadow-glass-lg-dark"
          >
+            <div className="mx-auto mb-4 h-1 w-10 rounded-full bg-ink/15 dark:bg-white/15" />
             <div className="mb-4 flex items-center justify-between">
-                <h2 className="font-display text-h4 font-medium">Filter & sort</h2>
-                <button onClick={() => setSheetOpen(false)} aria-label="Close" className="rounded-lg p-2 hover:bg-canvas dark:hover:bg-canvas-dark">
+                <h2 className="font-display text-h4 font-semibold">Filter &amp; sort</h2>
+                <button onClick={() => setSheetOpen(false)} aria-label="Close" className="rounded-lg p-2 hover:bg-white/40 dark:hover:bg-white/5">
                   <X size={18} />
                 </button>
               </div>
@@ -108,7 +109,7 @@ export default function FilterSortBar({ filters, onChange, onNewTask }) {
               </div>
               <button
                 onClick={() => setSheetOpen(false)}
-                className="mt-5 w-full rounded-xl bg-accent py-3 text-body font-medium text-white shadow-glow min-h-[44px]"
+                className="mt-5 w-full rounded-xl bg-accent-gradient py-3 text-body font-semibold text-white shadow-glow min-h-[44px]"
               >
                 Show results
               </button>

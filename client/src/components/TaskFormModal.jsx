@@ -14,7 +14,7 @@ const taskSchema = z.object({
 });
 
 const fieldClass =
-  'w-full rounded-xl border border-line dark:border-line-dark bg-surface2 dark:bg-surface2-dark px-3.5 py-2.5 text-body outline-none transition-colors focus:border-accent';
+  'glass-input w-full rounded-xl px-3.5 py-2.5 text-body outline-none transition-colors focus:border-accent';
 const labelClass = 'mb-1.5 block text-micro font-medium uppercase tracking-wide text-ink/50 dark:text-ink-dark/50';
 
 export default function TaskFormModal({ open, initialTask, onClose, onSubmit }) {
@@ -56,8 +56,7 @@ export default function TaskFormModal({ open, initialTask, onClose, onSubmit }) 
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.2 }}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4"
-      
+          className="fixed inset-0 z-50 flex items-center justify-center bg-ink/40 dark:bg-black/60 backdrop-blur-sm p-4"
           onClick={onClose}
         >
           <motion.div
@@ -66,12 +65,11 @@ export default function TaskFormModal({ open, initialTask, onClose, onSubmit }) 
             exit={{ opacity: 0, scale: 0.96, y: 4 }}
             transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
             onClick={(e) => e.stopPropagation()}
-  
-            className="w-full max-w-md max-h-[90vh] overflow-y-auto rounded-2xl border border-line dark:border-line-dark bg-surface dark:bg-surface-dark p-6 shadow-card dark:shadow-card-dark"
+            className="glass-strong w-full max-w-md max-h-[90vh] overflow-y-auto rounded-3xl p-6 shadow-glass-lg dark:shadow-glass-lg-dark"
           >
             <div className="mb-4 flex items-center justify-between">
-              <h2 className="font-display text-h4 font-medium">{initialTask ? 'Edit task' : 'New task'}</h2>
-              <button onClick={onClose} aria-label="Close" className="rounded-md p-1 hover:bg-canvas dark:hover:bg-canvas-dark transition-colors">
+              <h2 className="font-display text-h4 font-semibold">{initialTask ? 'Edit task' : 'New task'}</h2>
+              <button onClick={onClose} aria-label="Close" className="rounded-lg p-1.5 hover:bg-white/40 dark:hover:bg-white/5 transition-colors">
                 <X size={18} />
               </button>
             </div>
@@ -113,13 +111,13 @@ export default function TaskFormModal({ open, initialTask, onClose, onSubmit }) 
               </div>
 
               <div className="flex justify-end gap-2 pt-2">
-                <button type="button" onClick={onClose} className="rounded-lg px-4 py-2.5 text-body font-medium hover:bg-canvas dark:hover:bg-canvas-dark transition-colors min-h-[44px]">
+                <button type="button" onClick={onClose} className="rounded-xl px-4 py-2.5 text-body font-medium hover:bg-white/40 dark:hover:bg-white/5 transition-colors min-h-[44px]">
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="rounded-lg bg-accent px-4 py-2.5 text-body font-medium text-white shadow-glow disabled:opacity-50 transition-opacity min-h-[44px]"
+                  className="rounded-xl bg-accent-gradient px-4 py-2.5 text-body font-semibold text-white shadow-glow disabled:opacity-50 transition-opacity min-h-[44px]"
                 >
                   {initialTask ? 'Save changes' : 'Create task'}
                 </button>

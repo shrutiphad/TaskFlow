@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
 
 const fieldClass =
-  'w-full rounded-xl border border-line bg-surface2 px-3.5 py-2.5 text-body outline-none transition-colors dark:border-line-dark dark:bg-surface2-dark focus:border-accent';
+  'glass-input w-full rounded-xl px-3.5 py-2.5 text-body outline-none transition-colors focus:border-accent';
 const labelClass = 'mb-1.5 block text-micro font-medium uppercase tracking-wide text-ink/50 dark:text-ink-dark/50';
 
 export default function Register() {
@@ -32,21 +32,18 @@ export default function Register() {
   };
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-canvas px-4 dark:bg-canvas-dark">
-      <div className="pointer-events-none absolute -left-32 -top-32 h-80 w-80 rounded-full bg-amber/10 blur-3xl" />
-      <div className="pointer-events-none absolute -bottom-32 -right-32 h-80 w-80 rounded-full bg-accent/10 blur-3xl" />
-
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden px-4">
       <motion.div
         initial={{ opacity: 0, y: 16, scale: 0.98 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-       className="relative w-full max-w-sm rounded-2xl border border-line dark:border-line-dark bg-surface/90 dark:bg-surface-dark/90 backdrop-blur-xl p-6 sm:p-8 shadow-card dark:shadow-card-dark"
+       className="glass-strong relative w-full max-w-sm rounded-3xl p-6 sm:p-8 shadow-glass-lg dark:shadow-glass-lg-dark"
      >
      <div className="mb-6 flex items-center gap-2.5">
-          <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent font-display text-sm font-semibold text-white shadow-glow">T</span>
-          <span className="font-display text-h4 font-medium tracking-tight">TaskFlow</span>
+          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-accent-gradient font-display text-sm font-bold text-white shadow-glow">T</span>
+          <span className="font-display text-h4 font-semibold tracking-tight">TaskFlow</span>
         </div>
-        <h1 className="font-display text-h2 font-medium tracking-tight">Create your account</h1>
+        <h1 className="font-display text-h2 font-semibold tracking-tight">Create your account</h1>
         <p className="mt-1.5 text-body text-ink/55 dark:text-ink-dark/55">Start managing your tasks in seconds.</p>
 
         <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-3.5">
@@ -110,14 +107,14 @@ export default function Register() {
             whileTap={{ scale: 0.98 }}
             type="submit"
             disabled={isSubmitting}
-            className="w-full rounded-lg bg-accent py-3 text-body font-medium text-white shadow-glow disabled:opacity-50 transition-opacity min-h-[44px]"
+            className="w-full rounded-xl bg-accent-gradient py-3 text-body font-semibold text-white shadow-glow disabled:opacity-50 transition-opacity min-h-[44px]"
           >
             {isSubmitting ? 'Creating account…' : 'Create account'}
           </motion.button>
         </form>
 
         <p className="mt-5 text-center text-body text-ink/55 dark:text-ink-dark/55">
-          Already have an account? <Link to="/login" className="font-medium text-accent dark:text-accent-dark hover:underline">Log in</Link>
+          Already have an account? <Link to="/login" className="font-semibold text-accent dark:text-accent-dark hover:underline">Log in</Link>
         </p>
       </motion.div>
     </div>

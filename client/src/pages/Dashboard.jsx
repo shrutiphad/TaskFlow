@@ -26,7 +26,7 @@ export default function Dashboard() {
     .slice(0, 5);
 
   return (
-    <div className="flex">
+    <div className="md:flex">
       <Navbar />
       
          <main className="min-h-screen flex-1 px-5 pt-5 sm:px-8 sm:pt-8 pb-24 md:pb-8 max-w-5xl">
@@ -36,8 +36,8 @@ export default function Dashboard() {
           transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
           className="mb-7"
         >
-          <h1 className="font-display text-h1 font-medium tracking-tight">
-            Welcome back{user?.name ? `, ${user.name.split(' ')[0]}` : ''}
+          <h1 className="font-display text-h1 font-semibold tracking-tight">
+            Welcome back{user?.name ? <span className="text-gradient">, {user.name.split(' ')[0]}</span> : ''}
           </h1>
           <p className="mt-1 text-body text-ink/55 dark:text-ink-dark/55">Here's where things stand today.</p>
         </motion.header>

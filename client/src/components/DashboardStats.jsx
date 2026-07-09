@@ -21,7 +21,7 @@ export default function DashboardStats({ summary }) {
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-        className="col-span-2 sm:col-span-1 flex items-center gap-4 rounded-2xl border border-line/70 dark:border-line-dark/70 bg-surface dark:bg-surface-dark p-4 shadow-xs"
+        className="glass col-span-2 sm:col-span-1 flex items-center gap-4 rounded-2xl p-4 shadow-glass dark:shadow-glass-dark"
       >
         <div className="relative shrink-0">
           <ProgressRing value={byStatus.done} max={total || 1} colorClass="text-accent" />
@@ -31,7 +31,7 @@ export default function DashboardStats({ summary }) {
         </div>
         <div>
           <div className="font-mono text-micro font-medium uppercase text-ink/45 dark:text-ink-dark/45">Total tasks</div>
-          <div className="font-display text-h2 font-medium tabular"><AnimatedNumber value={total} /></div>
+          <div className="font-display text-h2 font-semibold tabular"><AnimatedNumber value={total} /></div>
         </div>
       </motion.div>
 
@@ -42,13 +42,13 @@ export default function DashboardStats({ summary }) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.08 + i * 0.06, ease: [0.16, 1, 0.3, 1] }}
           whileHover={{ y: -3 }}
-          className="rounded-2xl border border-line/70 dark:border-line-dark/70 bg-surface dark:bg-surface-dark p-4 shadow-xs hover:shadow-card dark:hover:shadow-card-dark transition-shadow duration-300"
+          className="glass rounded-2xl p-4 shadow-glass dark:shadow-glass-dark hover:shadow-glass-lg dark:hover:shadow-glass-lg-dark transition-shadow duration-300"
         >
           <div className="flex items-center justify-between">
             <div className="font-mono text-micro font-medium uppercase text-ink/45 dark:text-ink-dark/45">{cell.label}</div>
             <ProgressRing value={cell.value} max={total || 1} size={22} stroke={3} colorClass={cell.ring} />
           </div>
-          <div className={`mt-2 font-display text-h2 font-medium tabular ${cell.tone}`}>
+          <div className={`mt-2 font-display text-h2 font-semibold tabular ${cell.tone}`}>
             <AnimatedNumber value={cell.value} />
           </div>
         </motion.div>

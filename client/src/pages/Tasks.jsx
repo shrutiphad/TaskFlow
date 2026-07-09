@@ -57,7 +57,7 @@ export default function Tasks() {
   const hasActiveFilters = Boolean(filters.status || filters.priority);
 
   return (
-    <div className="flex">
+    <div className="md:flex">
       <Navbar />
 
          <main className="min-h-screen flex-1 px-5 pt-5 sm:px-8 sm:pt-8 pb-24 md:pb-8 max-w-5xl">
@@ -67,7 +67,7 @@ export default function Tasks() {
           transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
           className="mb-6"
         >
-          <h1 className="font-display text-h1 font-medium tracking-tight">Tasks</h1>
+          <h1 className="font-display text-h1 font-semibold tracking-tight">Tasks</h1>
           <p className="mt-1 text-body text-ink/55 dark:text-ink-dark/55">
             {tasks.length} task{tasks.length === 1 ? '' : 's'} matching your filters.
           </p>
@@ -81,7 +81,7 @@ export default function Tasks() {
         {isLoading ? (
           <div className="space-y-2.5">
             {[0, 1, 2].map((i) => (
-              <div key={i} className="h-[104px] animate-pulse rounded-2xl border border-line/60 dark:border-line-dark/60 bg-surface2 dark:bg-surface2-dark" />
+              <div key={i} className="glass h-[104px] animate-pulse rounded-2xl shadow-glass dark:shadow-glass-dark" />
             ))}
           </div>
         ) : tasks.length === 0 ? (

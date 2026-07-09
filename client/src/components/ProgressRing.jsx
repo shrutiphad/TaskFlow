@@ -25,6 +25,7 @@ export default function ProgressRing({ value, max, size = 56, stroke = 5, colorC
         strokeDasharray={circumference}
         className={colorClass}
         stroke="currentColor"
+        style={{ filter: 'drop-shadow(0 0 4px currentColor)' }}
         initial={{ strokeDashoffset: circumference }}
         animate={{ strokeDashoffset: circumference * (1 - pct) }}
         transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}
